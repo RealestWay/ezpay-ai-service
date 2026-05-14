@@ -1,4 +1,10 @@
+import torch
 from ultralytics import YOLO
+import ultralytics.nn.tasks
+
+# Fix for PyTorch 2.6+ default weights_only=True
+torch.serialization.add_safe_globals([ultralytics.nn.tasks.DetectionModel])
+
 from PIL import Image
 from typing import List, Dict
 

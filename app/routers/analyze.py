@@ -6,12 +6,17 @@ from app.services.yolo_detector import detect_objects
 from app.services.ocr_processor import process_ocr
 from app.services.consistency_engine import verify_consistency
 from app.services.scoring_engine import calculate_scores
+from app.services.backend_service import backend_service
 import asyncio
 
 router = APIRouter()
 
 @router.post("/analyze", response_model=AnalyzeResponse)
 async def analyze_property(request: AnalyzeRequest):
+    # Log backend connectivity status for production debugging
+    backend_up = await backend_service.ping_backend()
+    print(f"Analysis started for {request.listing_id}. Backend reachable: {backend_up}")
+    
     try:
         # 1. Download images
         images_dict = await download_images(request.images.model_dump())
